@@ -1,4 +1,5 @@
 import cv2
+import time
 
 face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
 profil_face_cascade = cv2.CascadeClassifier("haarcascade_profileface.xml")
@@ -22,6 +23,8 @@ def detectElements(image, cascade, scale = 1.2, Neighbors = 5, color = (0, 255, 
 
 
 while True:
+
+    start_time = time.time()
     check, frame = video.read()
 
     detectElements(frame, face_cascade, 1.3)
@@ -29,7 +32,13 @@ while True:
     detectElements(frame, eye_cascade, color = (255, 0, 0))
 #    detectElements(frame, smile_cascade, color = (0, 0, 255))
 
+# add fps on the screen
+    fps = round(1 / (time.time() - start_time), 2)
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    cv2.putText(frame,"fps - " + str(fps),(0,50), font, 1,(0,255,0),2,cv2.LINE_AA)
+
     cv2.imshow("Faces & Eyes", frame)
+
     key = cv2.waitKey(1)
     if key == ord('q'):
         break
